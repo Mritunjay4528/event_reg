@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E Labs | Event Registration</title>
+<style>
+  :root{
+    --bg:#0c0904;
+    --bg-card:#171208;
+    --orange:#ff8c1a;
+    --text:#f3ede3;
+    --text-dim:#b8ae9c;
+    --border:#3a2c14;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html, body{height:100%;}
+  body{
+    background:radial-gradient(ellipse at top, #1a1206 0%, #0c0904 60%);
+    font-family:'Segoe UI', Arial, sans-serif;
+    color:var(--text);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    height:100vh;
+    overflow:hidden;
+  }
+  header{
+    width:100%;
+    max-width:1200px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:clamp(10px,2vh,20px) 32px;
+    flex-shrink:0;
+  }
+  .logo{
+    font-weight:700;
+    letter-spacing:1px;
+    color:var(--orange);
+    font-size:15px;
+  }
+  nav{display:flex;gap:28px;font-size:14px;color:var(--text-dim);}
+  nav a{color:inherit;text-decoration:none;transition:color .2s;}
+  nav a.active, nav a:hover{color:var(--orange);}
+  main{
+    flex:1;
+    min-height:0;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:0 16px;
+    overflow:hidden;
+  }
+  h1{
+    text-align:center;
+    color:var(--orange);
+    font-size:clamp(20px,3vw,32px);
+    line-height:1.2;
+  }
+  p.sub{
+    margin-top:6px;
+    text-align:center;
+    color:var(--text-dim);
+    max-width:480px;
+    font-size:clamp(12px,1.4vw,14px);
+  }
+  form{
+    margin-top:clamp(10px,2vh,22px);
+    width:100%;
+    max-width:420px;
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:clamp(14px,2.5vh,26px) 24px;
+    display:flex;
+    flex-direction:column;
+    gap:clamp(8px,1.6vh,14px);
+    box-shadow:0 0 40px rgba(255,140,26,.06);
+  }
+  label{
+    font-size:12px;
+    color:var(--text-dim);
+    margin-bottom:4px;
+    display:block;
+  }
+  .field{display:flex;flex-direction:column;}
+  input{
+    background:#0f0b04;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:clamp(9px,1.4vh,12px) 14px;
+    color:var(--text);
+    font-size:14px;
+    outline:none;
+    transition:border-color .2s, box-shadow .2s;
+    width:100%;
+  }
+  input::placeholder{color:#6b6252;}
+  input:focus{
+    border-color:var(--orange);
+    box-shadow:0 0 0 3px rgba(255,140,26,.15);
+  }
+  button{
+    margin-top:4px;
+    background:transparent;
+    color:var(--orange);
+    border:1.5px solid var(--orange);
+    border-radius:8px;
+    padding:clamp(10px,1.6vh,13px);
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.5px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition:background .2s, color .2s;
+  }
+  button:hover:not(:disabled){background:var(--orange);color:#1a1206;}
+  button:disabled{opacity:.6;cursor:not-allowed;}
+  /* Top drop-down notification banner */
+  .banner{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:100;
+    text-align:center;
+    font-size:14px;
+    font-weight:500;
+    padding:14px 16px;
+    transform:translateY(-100%);
+    transition:transform .35s ease;
+    box-shadow:0 4px 18px rgba(0,0,0,.35);
+  }
+  .banner.show{transform:translateY(0);}
+  .banner.success{background:#1e3a26;color:#7fe0a0;border-bottom:1px solid rgba(60,180,90,.4);}
+  .banner.error{background:#3a1e1e;color:#ff9d92;border-bottom:1px solid rgba(220,70,60,.4);}
+
+  /* Phones: allow natural scroll, relax fixed-height constraints */
+  @media (max-width:600px){
+    body{height:auto;min-height:100vh;overflow-y:auto;}
+    main{overflow:visible;padding:16px;}
+    header{flex-direction:column;gap:12px;padding:18px 16px;}
+    nav{gap:18px;font-size:13px;flex-wrap:wrap;justify-content:center;}
+    form{margin-top:18px;padding:22px 18px;}
+  }
+
+  /* Short laptop screens: shrink further so everything still fits */
+  @media (max-height:680px){
+    header{padding:8px 32px;}
+    form{padding:12px 22px;gap:8px;}
+    h1{font-size:20px;}
+    p.sub{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="banner" id="banner"></div>
+
+<header>
+  <div class="logo">E LABS</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Domain</a>
+    <a href="#">Gallery</a>
+    <a href="#" class="active">Register</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Register for the Event</h1>
+  <p class="sub">Fill in your details below to secure your spot.</p>
+
+  <form id="regForm" novalidate>
+    <div class="field">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" placeholder="Your full name" required>
+    </div>
+
+    <div class="field">
+      <label for="roll_number">Roll Number</label>
+      <input type="text" id="roll_number" name="roll_number" placeholder="e.g. 22051234" required>
+    </div>
+
+    <div class="field">
+      <label for="branch">Branch</label>
+      <input type="text" id="branch" name="branch" placeholder="e.g. CSE, ECE, ME..." required>
+    </div>
+
+    <div class="field">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required>
+    </div>
+
+    <button type="submit" id="submitBtn">REGISTER →</button>
+  </form>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ---- SUPABASE CONFIG ----
+  // Replace with your project's values (Project Settings > API in Supabase dashboard).
+  const SUPABASE_URL = "YOUR_SUPABASE_URL";       // e.g. https://xxxxxxxx.supabase.co
+  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+  const TABLE_NAME = "matlab_event";              // your existing table
+
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const form = document.getElementById('regForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const banner = document.getElementById('banner');
+  let bannerTimer;
+
+  function showBanner(text, type){
+    clearTimeout(bannerTimer);
+    banner.textContent = text;
+    banner.className = 'banner show ' + type;
+    bannerTimer = setTimeout(() => {
+      banner.className = 'banner ' + type;
+    }, 4000);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const roll_number = document.getElementById('roll_number').value.trim();
+    const branch = document.getElementById('branch').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    if(!name || !roll_number || !branch || !email){
+      showBanner('Please fill in all fields.', 'error');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
+    const { error } = await supabaseClient
+      .from(TABLE_NAME)
+      .insert([{ name, roll_number, branch, email }]);
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'REGISTER →';
+
+    if (error) {
+      if (error.code === '23505') {
+        showBanner('You have already registered with this roll number.', 'error');
+      } else {
+        showBanner('Something went wrong: ' + error.message, 'error');
+      }
+      return;
+    }
+
+    showBanner('You are registered! See you at the event.', 'success');
+    form.reset();
+  });
+</script>
+
+</body>
+</html>
