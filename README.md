@@ -1,7 +1,5 @@
 # E Labs Event Registration
 
-React frontend + Node/Express backend. `index.html` (old static version) is no longer used — delete it whenever you like.
-
 ## Backend
 
 ```
