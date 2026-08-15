@@ -27,6 +27,10 @@ app.post('/api/register', async (req, res) => {
     return res.status(400).json({ error: 'validation', message: 'All fields are required.' });
   }
 
+  if (!/^\d+$/.test(String(roll_number).trim())) {
+    return res.status(400).json({ error: 'validation', message: 'Roll number must contain digits only.' });
+  }
+
   const supabase = getSupabaseClient();
   if (!supabase) {
     return res.status(500).json({

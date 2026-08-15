@@ -2,75 +2,64 @@
   --bg:#0c0904;
   --bg-card:#171208;
   --orange:#ff8c1a;
+  --red:#ff4e2e;
   --text:#f3ede3;
   --text-dim:#b8ae9c;
   --border:#3a2c14;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html, body, #root{height:100%;}
+html, body, #root{min-height:100%;}
 body{
   background:radial-gradient(ellipse at top, #1a1206 0%, #0c0904 60%);
   font-family:'Segoe UI', Arial, sans-serif;
   color:var(--text);
 }
-#root{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  height:100vh;
-  overflow:hidden;
-}
 
-/* Header: always a single row — logo left, nav right.
-   Never stacks or wraps; nav scrolls horizontally as a fallback. */
-header{
+/* Top drop-down notification banner (shared) */
+.banner{
+  position:fixed;
+  top:0;
+  left:0;
   width:100%;
-  max-width:1200px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:clamp(10px,2vh,18px) 24px;
-  flex-shrink:0;
+  z-index:100;
+  text-align:center;
+  font-size:14px;
+  font-weight:500;
+  padding:14px 16px;
+  transform:translateY(-100%);
+  transition:transform .35s ease;
+  box-shadow:0 4px 18px rgba(0,0,0,.35);
 }
-.logo{
-  font-weight:700;
-  letter-spacing:1px;
-  color:var(--orange);
-  font-size:clamp(13px,2vw,15px);
-  white-space:nowrap;
-}
-nav{
-  display:flex;
-  gap:clamp(10px,2.5vw,28px);
-  font-size:clamp(12px,1.8vw,14px);
-  color:var(--text-dim);
-  overflow-x:auto;
-  white-space:nowrap;
-  scrollbar-width:none;
-}
-nav::-webkit-scrollbar{display:none;}
-nav a{color:inherit;text-decoration:none;transition:color .2s;}
-nav a.active, nav a:hover{color:var(--orange);}
+.banner.show{transform:translateY(0);}
+.banner.success{background:#1e3a26;color:#7fe0a0;border-bottom:1px solid rgba(60,180,90,.4);}
+.banner.error{background:#3a1e1e;color:#ff9d92;border-bottom:1px solid rgba(220,70,60,.4);}
 
-main{
-  flex:1;
-  min-height:0;
-  width:100%;
+/* ---------------- Register page ---------------- */
+main.register-main{
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding:0 16px;
-  overflow:hidden;
+  min-height:100vh;
+  width:100%;
+  padding:24px 16px;
 }
-h1{
+.back-link{
+  align-self:center;
+  color:var(--text-dim);
+  text-decoration:none;
+  font-size:13px;
+  margin-bottom:clamp(8px,2vh,16px);
+  transition:color .2s;
+}
+.back-link:hover{color:var(--orange);}
+main.register-main h1{
   text-align:center;
   color:var(--orange);
   font-size:clamp(20px,3vw,32px);
   line-height:1.2;
 }
-p.sub{
+main.register-main p.sub{
   margin-top:6px;
   text-align:center;
   color:var(--text-dim);
@@ -113,58 +102,157 @@ input:focus{
   border-color:var(--orange);
   box-shadow:0 0 0 3px rgba(255,140,26,.15);
 }
-button{
+button, .register-btn{
   margin-top:4px;
   background:transparent;
   color:var(--orange);
   border:1.5px solid var(--orange);
   border-radius:8px;
-  padding:clamp(10px,1.6vh,13px);
+  padding:clamp(10px,1.6vh,13px) 22px;
   font-size:14px;
   font-weight:600;
   letter-spacing:.5px;
   cursor:pointer;
-  display:flex;
+  display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:8px;
+  text-decoration:none;
   transition:background .2s, color .2s;
 }
-button:hover:not(:disabled){background:var(--orange);color:#1a1206;}
+button:hover:not(:disabled), .register-btn:hover{background:var(--orange);color:#1a1206;}
 button:disabled{opacity:.6;cursor:not-allowed;}
 
-/* Top drop-down notification banner */
-.banner{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  z-index:100;
-  text-align:center;
-  font-size:14px;
-  font-weight:500;
-  padding:14px 16px;
-  transform:translateY(-100%);
-  transition:transform .35s ease;
-  box-shadow:0 4px 18px rgba(0,0,0,.35);
-}
-.banner.show{transform:translateY(0);}
-.banner.success{background:#1e3a26;color:#7fe0a0;border-bottom:1px solid rgba(60,180,90,.4);}
-.banner.error{background:#3a1e1e;color:#ff9d92;border-bottom:1px solid rgba(220,70,60,.4);}
-
-/* Phones: allow natural scroll, relax fixed-height constraints.
-   Header stays a single row (no stacking) — just tighter spacing. */
-@media (max-width:600px){
-  #root{height:auto;min-height:100vh;overflow-y:auto;}
-  main{overflow:visible;padding:16px;}
-  header{padding:14px 16px;}
-  form{margin-top:18px;padding:22px 18px;}
-}
-
-/* Short laptop screens: shrink further so everything still fits without scrolling */
-@media (max-height:680px){
-  header{padding:8px 24px;}
+@media (max-height:680px) and (min-width:601px){
+  main.register-main p.sub{display:none;}
   form{padding:12px 22px;gap:8px;}
-  h1{font-size:20px;}
-  p.sub{display:none;}
+}
+
+/* ---------------- Event details page ---------------- */
+.details-page{
+  width:100%;
+  max-width:900px;
+  margin:0 auto;
+  padding:20px 20px 60px;
+  display:flex;
+  flex-direction:column;
+  gap:clamp(28px,5vw,48px);
+}
+.details-header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.badge{
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:6px 14px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.5px;
+  color:var(--text-dim);
+}
+.badge.accent{color:var(--orange);border-color:var(--orange);}
+
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
+.hero-title{
+  font-size:clamp(38px,9vw,64px);
+  font-weight:900;
+  letter-spacing:1px;
+  line-height:1.05;
+  color:#fdf8ec;
+  text-transform:uppercase;
+}
+.tagline{
+  color:var(--orange);
+  letter-spacing:2px;
+  font-size:clamp(12px,2vw,15px);
+  font-weight:600;
+}
+.status{
+  font-size:clamp(22px,5vw,34px);
+  font-weight:800;
+  text-transform:uppercase;
+  color:#fdf8ec;
+  margin-top:8px;
+}
+.status-open{color:var(--red);}
+
+.info-bar{
+  margin-top:18px;
+  width:100%;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:20px 40px;
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px 24px;
+}
+.info-bar > div{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.info-label{font-size:11px;letter-spacing:1px;color:var(--text-dim);}
+.info-value{font-size:14px;font-weight:600;color:var(--text);text-align:center;}
+
+.schedule{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:20px;
+}
+.schedule-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.schedule-card h3{color:var(--orange);font-size:16px;}
+.schedule-tagline{color:var(--text);font-weight:600;font-size:14px;}
+.schedule-text{color:var(--text-dim);font-size:13px;line-height:1.6;}
+
+.expect h2{
+  text-align:center;
+  color:var(--orange);
+  font-size:clamp(22px,4vw,30px);
+  margin-bottom:20px;
+}
+.expect-grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:18px;
+}
+.expect-item{
+  display:flex;
+  gap:14px;
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px 18px;
+}
+.expect-icon{font-size:22px;line-height:1;}
+.expect-item h4{font-size:14px;color:var(--text);margin-bottom:4px;}
+.expect-item p{font-size:12.5px;color:var(--text-dim);line-height:1.5;}
+
+.cta{display:flex;justify-content:center;}
+.cta .register-btn{font-size:16px;padding:16px 34px;}
+
+/* Responsive: tablets */
+@media (max-width:760px){
+  .schedule{grid-template-columns:1fr;}
+  .expect-grid{grid-template-columns:1fr;}
+}
+
+/* Responsive: phones */
+@media (max-width:600px){
+  .details-page{padding:16px 16px 48px;gap:32px;}
+  .details-header{gap:8px;}
+  .badge{padding:5px 10px;font-size:11px;}
+  .info-bar{flex-direction:column;gap:14px;padding:16px;}
+  .info-bar > div{align-items:flex-start;}
+  main.register-main{padding:20px 14px;}
+  form{padding:22px 18px;}
 }
